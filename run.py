@@ -23,8 +23,17 @@ class MaxFilesReached(Exception):
     pass
 
 def max_files(form, field):
-    if len(field.data) > 5:
-        raise ValidationError('You can upload maximum 5 files.')
+    # Initialize a counter for the number of files
+    num_files = 0
+
+    # Loop through each uploaded file
+    for upload in field.data:
+        # Increment the counter for each file
+        num_files += 1
+
+        # If the number of files exceeds 5, raise a validation error
+        if num_files > 5:
+            raise ValidationError('You can upload maximum 5 files.')
 
 class UploadForm(FlaskForm):
     name = StringField('Enter the Name', validators=[DataRequired()])
