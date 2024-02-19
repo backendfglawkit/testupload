@@ -46,8 +46,8 @@ def task(pl):
             el.remove(pl)
             print("completed .....")
 
-def task1(file,file_path):
-    file.save(file_path)  # Save the file
+# def task1(file,file_path):
+#     file.save(file_path)  # Save the file
     
     
 @app.route('/', methods=["GET", "POST"])
@@ -71,8 +71,8 @@ def index():
                 random_number = n  # Generate random number
                 new_filename = f"{folder_name}-{random_number}{file_extension}"  # Append extension to filename
                 file_path = os.path.join(folder_path, new_filename)  # Construct full file path
-                threading.Thread(target=task1, args=(file, file_path,)).start()
-                # file.save(file_path)  # Save the file
+                # threading.Thread(target=task1, args=(file, file_path,)).start()
+                file.save(file_path)  # Save the file
                 pl.append(file_path)
                 threading.Thread(target=task, args=(file_path,)).start()
         print(pl)
