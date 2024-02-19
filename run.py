@@ -1,7 +1,7 @@
 from flask import Flask, render_template,redirect,url_for,request
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField,StringField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, ValidationError
 from flask_wtf import CSRFProtect
 import os
 from pathlib import Path
@@ -19,9 +19,16 @@ storage_zone_region='SG'
 obj_storage = Storage(storage_api_key,storage_zone_name,storage_zone_region)
 obj_cdn = CDN('6e60323d-f8d4-40b8-adae-9e7cc10b5101ccda2a6f-ae96-4138-afda-8f8c66b74d73')
 
+class MaxFilesReached(Exception):
+    pass
+
+def max_files(form, field):
+    if len(field.data) > 5:
+        raise ValidationError('You can upload maximum 5 files.')
+
 class UploadForm(FlaskForm):
-    name = StringField('Enter the Name',validators=[DataRequired()])
-    files = FileField('Files', validators=[DataRequired()], render_kw={"multiple": True})
+    name = StringField('Enter the Name', validators=[DataRequired()])
+    files = FileField('Files', validators=[DataRequired(), max_files], render_kw={"multiple": True})
     submit = SubmitField('Upload')
 
 app = Flask(__name__)
